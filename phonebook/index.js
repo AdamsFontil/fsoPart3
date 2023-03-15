@@ -4,14 +4,17 @@ const http = require('http')
 const express = require('express')
 const morgan = require('morgan');
 const app = express()
+const cors = require('cors')
 
-// const requestLogger = (request, response, next) => {
-//     console.log('Method:', request.method)
-//     console.log('Path:  ', request.path)
-//     console.log('Body:  ', request.body)
-//     console.log('---')
-//     next()
-//   }
+
+
+const requestLogger = (request, response, next) => {
+    console.log('Method:', request.method)
+    console.log('Path:  ', request.path)
+    console.log('Body:  ', request.body)
+    console.log('---')
+    next()
+  }
 
 
 let persons = [
@@ -38,9 +41,10 @@ let persons = [
 ]
 
 app.use(express.json())
-// app.use(requestLogger)
+app.use(requestLogger)
+app.use(express.static('build'))
 // app.use(morgan('tiny'));
-// Define custom format string
+
 
 morgan.token('body', (req, res) => JSON.stringify(req.body));
 
@@ -48,6 +52,7 @@ const testConfig = ':method :url :status :res[content-length] - :response-time m
 
 // Use morgan middleware with custom format
 app.use(morgan(testConfig));
+app.use(cors())
 
 
 
@@ -141,7 +146,7 @@ app.get('/api/persons/:id', (request, response) => {
   app.use(unknownEndpoint)
 
 
-const PORT = 3001
+const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
