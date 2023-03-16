@@ -144,7 +144,7 @@ app.put('/api/persons/:id', (request, response, next) => {
   app.use(errorHandler)
 
 
-const PORT = process.env.PORT || 8080
+const PORT = process.env.PORT
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
