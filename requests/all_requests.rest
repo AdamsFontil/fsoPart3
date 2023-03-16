@@ -1,17 +1,28 @@
 # get all persons
-GET http://localhost:3001/api/persons
+GET http://localhost:3003/api/persons
 
 ### get specific person
-GET http://localhost:3001/api/persons/2
+GET http://localhost:3003/api/persons/6412ba9c5b437d46d0c7c950
 
 
 ### delete person
-DELETE http://localhost:3001/api/persons/3
+DELETE http://localhost:3003/api/persons/6412ab9bc6fbf6da4c4c9652
 
 ### add new person
-POST http://localhost:3001/api/persons HTTP/1.1
+POST http://localhost:3003/api/persons HTTP/1.1
 Content-Type: application/json
 
-{ "name": "Arto He",
-    "number": "040-123456"
+{ "name": "Arto Hellas",
+    "number": "048"
     }
+
+### update person
+PUT http://localhost:3003/api/persons/6412ba9c5b437d46d0c7c950
+Content-Type: application/json
+
+{
+    "number": "048"
+    }
+
+### number of people in phone
+GET http://localhost:3003/info
