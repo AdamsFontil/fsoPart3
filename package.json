@@ -10,12 +10,15 @@
     "build:ui": "rm -rf build && cd ../../fsoPart2/phonebook/ && npm run build && cp -r build ../../fsoPart3/phonebook",
     "deploy": "fly deploy",
     "deploy:full": "npm run build:ui && npm run deploy",
-    "logs:prod": "fly logs"
+    "logs:prod": "fly logs",
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix ."
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "eslint": "^8.36.0",
     "nodemon": "^2.0.21"
   },
   "dependencies": {

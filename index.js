@@ -5,47 +5,47 @@ require('dotenv').config()
 const Person = require('./models/person')
 
 const express = require('express')
-const morgan = require('morgan');
+const morgan = require('morgan')
 const app = express()
 const cors = require('cors')
 
 
 
 const requestLogger = (request, response, next) => {
-    console.log('Method:', request.method)
-    console.log('Path:  ', request.path)
-    console.log('Body:  ', request.body)
-    console.log('---')
-    next()
+  console.log('Method:', request.method)
+  console.log('Path:  ', request.path)
+  console.log('Body:  ', request.body)
+  console.log('---')
+  next()
+}
+
+morgan.token('body', (req) => JSON.stringify(req.body))
+
+const testConfig = ':method :url :status :res[content-length] - :response-time ms :body'
+
+const unknownEndpoint = (request, response) => {
+  response.status(404).send({ error: 'unknown endpoint' })
+}
+
+
+const errorHandler = (error, request, response, next) => {
+  console.error(error.message)
+
+  if (error.name === 'CastError') {
+    return response.status(400).send({ error: 'malformatted id' })
+  } else if (error.name === 'ValidationError') {
+    return response.status(400).json({ error: error.message })
   }
 
-  morgan.token('body', (req, res) => JSON.stringify(req.body));
-
-  const testConfig = ':method :url :status :res[content-length] - :response-time ms :body';
-
-  const unknownEndpoint = (request, response) => {
-    response.status(404).send({ error: 'unknown endpoint' })
-  }
-
-
-  const errorHandler = (error, request, response, next) => {
-    console.error(error.message)
-
-    if (error.name === 'CastError') {
-      return response.status(400).send({ error: 'malformatted id' })
-    } else if (error.name === 'ValidationError') {
-      return response.status(400).json({ error: error.message })
-    }
-
-    next(error)
-  }
+  next(error)
+}
 
 
 app.use(express.json())
 app.use(requestLogger)
 app.use(express.static('build'))
 // app.use(morgan('tiny'));
-app.use(morgan(testConfig));
+app.use(morgan(testConfig))
 app.use(cors())
 
 
@@ -66,10 +66,10 @@ app.get('/api/persons', (request, response) => {
 })
 
 app.get('/info', (request, response) => {
-    Person.find({}).then(persons => {
-      response.send(`Phonebook has info on ${persons.length} people<br>${new Date()}`);
+  Person.find({}).then(persons => {
+    response.send(`Phonebook has info on ${persons.length} people<br>${new Date()}`)
 
-    })
+  })
 })
 
 app.get('/api/persons/:id', (request, response) => {
@@ -118,7 +118,7 @@ app.post('/api/persons', async (request, response, next) => {
     person.save().then(savedPerson => {
       response.json(savedPerson)
     })
-    .catch(error => next(error))
+      .catch(error => next(error))
   }
 })
 
@@ -138,13 +138,13 @@ app.put('/api/persons/:id', (request, response, next) => {
 
 
 
-  app.use(unknownEndpoint)
+app.use(unknownEndpoint)
 
-  // this has to be the last loaded middleware.
-  app.use(errorHandler)
+// this has to be the last loaded middleware.
+app.use(errorHandler)
 
 
-const PORT = process.env.PORT
+const PORT = process.env.PORT || 8080
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
